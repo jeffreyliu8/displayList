@@ -1,13 +1,11 @@
 package com.example.displaylist.repository
 
 import com.example.displaylist.endpoint.WebEndpoint
-import com.example.displaylist.model.Country
 import com.orhanobut.logger.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
 
 class CountryRepositoryImpl : CountryRepository {
 
@@ -29,12 +27,5 @@ class CountryRepositoryImpl : CountryRepository {
             .create(WebEndpoint::class.java)
     }
 
-    override suspend fun getCountries(): Result<List<Country>> {
-        return try {
-            val result = webEndpoint.searchRepos()
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    override suspend fun getCountries() = webEndpoint.getCountries()
 }
