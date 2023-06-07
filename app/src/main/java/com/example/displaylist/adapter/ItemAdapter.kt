@@ -22,9 +22,9 @@ class ItemAdapter(private val listener: (Country) -> Unit) :
         val diffCallback = CountryDiffUtil(mList, newCounties)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
 
+        diffResult.dispatchUpdatesTo(this)
         this.mList.clear()
         this.mList.addAll(newCounties)
-        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
