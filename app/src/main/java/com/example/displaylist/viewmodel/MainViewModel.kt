@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.displaylist.model.Country
 import com.example.displaylist.repository.CountryRepositoryImpl
+import com.example.displaylist.uitl.Event
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +13,6 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val countryRepository = CountryRepositoryImpl()
 
-
     private val _uiState = MutableStateFlow(MainScreenUiState())
     val uiStateFlow = _uiState.asStateFlow()
 
@@ -20,7 +20,7 @@ class MainViewModel : ViewModel() {
         getCountries()
     }
 
-    private fun getCountries() {
+    fun getCountries() {
         _uiState.update {
             it.copy(
                 isLoading = true,
@@ -31,14 +31,15 @@ class MainViewModel : ViewModel() {
             if (result.isSuccess) {
                 _uiState.update {
                     it.copy(
-                        isLoading = true,
+                        isLoading = false,
                         counties = result.getOrThrow()
                     )
                 }
             } else {
                 _uiState.update {
                     it.copy(
-                        isLoading = true,
+                        isLoading = false,
+                        error = Event(result.exceptionOrNull().toString())
                     )
                 }
             }
@@ -50,5 +51,6 @@ class MainViewModel : ViewModel() {
 
 data class MainScreenUiState(
     val isLoading: Boolean = false,
-    val counties: List<Country> = emptyList()
+    val counties: List<Country> = emptyList(),
+    val error: Event<String?>? = null,
 )
