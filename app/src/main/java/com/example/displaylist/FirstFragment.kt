@@ -5,8 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.displaylist.adapter.ItemAdapter
 import com.example.displaylist.databinding.FragmentFirstBinding
+import com.example.displaylist.viewmodel.MainViewModel
+import com.orhanobut.logger.Logger
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -19,10 +27,13 @@ class FirstFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var adapter: ItemAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,8 +43,39 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+//        binding.buttonFirst.setOnClickListener {
+//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+//        }
+
+        setupRecyclerView()
+        setupViewModel()
+    }
+
+    private fun setupRecyclerView() {
+        // Creates a vertical Layout Manager
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Access the RecyclerView Adapter
+        adapter = ItemAdapter {
+            Logger.d(it.name)
+        }
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun setupViewModel() {
+        // Start a coroutine in the lifecycle scope
+        lifecycleScope.launch {
+            // repeatOnLifecycle launches the block in a new coroutine every time the
+            // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
+
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Trigger the flow and start listening for values.
+                // Note that this happens when lifecycle is STARTED and stops
+                // collecting when the lifecycle is STOPPED
+                viewModel.uiStateFlow.collect { state ->
+                    adapter.updateList(state.counties)
+                }
+            }
         }
     }
 
