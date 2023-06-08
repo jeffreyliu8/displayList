@@ -1,5 +1,6 @@
 package com.example.displaylist.endpoint
 
+import com.example.displaylist.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -10,9 +11,11 @@ object WebEndpointObj {
     fun getInstance(): WebEndpoint {
         val httpClient = OkHttpClient.Builder()
 
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
-        httpClient.addInterceptor(logging)
+        if (BuildConfig.DEBUG) {
+            val logging = HttpLoggingInterceptor()
+            logging.level = HttpLoggingInterceptor.Level.BODY
+            httpClient.addInterceptor(logging)
+        }
 
         return Retrofit.Builder()
             .baseUrl("https://gist.githubusercontent.com/")
