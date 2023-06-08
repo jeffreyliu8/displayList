@@ -2,6 +2,7 @@ package com.example.displaylist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.displaylist.endpoint.WebEndpointObj
 import com.example.displaylist.model.Country
 import com.example.displaylist.repository.CountryRepositoryImpl
 import com.example.displaylist.uitl.Event
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
-    private val countryRepository = CountryRepositoryImpl()
+    private val webEndpoint = WebEndpointObj.getInstance()
+    private val countryRepository = CountryRepositoryImpl(webEndpoint)
     private val getCountriesUseCase = GetCountriesUseCase(countryRepository)
 
     private val _uiState = MutableStateFlow(MainScreenUiState())

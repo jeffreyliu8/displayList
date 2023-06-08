@@ -1,6 +1,7 @@
 package com.example.displaylist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,6 @@ import com.example.displaylist.adapter.ItemAdapter
 import com.example.displaylist.databinding.FragmentFirstBinding
 import com.example.displaylist.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 
 
@@ -59,7 +59,7 @@ class FirstFragment : Fragment() {
 
         // Access the RecyclerView Adapter
         adapter = ItemAdapter {
-            Logger.d(it.name)
+            Log.d("tag", it.name)
         }
         binding.recyclerView.adapter = adapter
 
