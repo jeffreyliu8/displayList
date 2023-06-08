@@ -1,7 +1,6 @@
 package com.example.displaylist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.displaylist.adapter.ItemAdapter
 import com.example.displaylist.databinding.FragmentFirstBinding
@@ -45,10 +45,6 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
-
         setupRecyclerViewAndUIs()
         setupViewModel()
     }
@@ -59,7 +55,9 @@ class FirstFragment : Fragment() {
 
         // Access the RecyclerView Adapter
         adapter = ItemAdapter {
-            Log.d("tag", it.name)
+            val action =
+                FirstFragmentDirections.actionFirstFragmentToSecondFragment(code = it.code)
+            findNavController().navigate(action)
         }
         binding.recyclerView.adapter = adapter
 
