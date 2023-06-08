@@ -56,7 +56,7 @@ class FirstFragment : Fragment() {
         // Access the RecyclerView Adapter
         adapter = ItemAdapter {
             val action =
-                FirstFragmentDirections.actionFirstFragmentToSecondFragment(code = it.code)
+                FirstFragmentDirections.actionFirstFragmentToSecondFragment(country = it)
             findNavController().navigate(action)
         }
         binding.recyclerView.adapter = adapter
