@@ -7,7 +7,7 @@ import com.example.displaylist.model.Country
 import com.example.displaylist.repository.CountryRepositoryImpl
 import com.example.displaylist.uitl.Event
 import com.example.displaylist.usecase.GetCountriesUseCase
-import kotlinx.coroutines.Dispatchers.Default
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,7 +31,7 @@ class MainViewModel : ViewModel() {
                 isLoading = true,
             )
         }
-        viewModelScope.launch(Default) {
+        viewModelScope.launch(IO) {
             val result = getCountriesUseCase()
             if (result.isSuccess) {
                 _uiState.update {
